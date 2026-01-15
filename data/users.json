@@ -1,1 +1,11 @@
-[]
+[
+    {
+        "userId": "8e6a98b4-a979-48e9-9a80-47abb3f5704c",
+        "email": "string1@naver.com",
+        "name": "string1",
+        "password": "$argon2id$v=19$m=65536,t=3,p=4$StVmmpY/Da7oi/HfQZ7laQ$D/Df+b1LfuhAj0h88esk7q/T4UIM5fyKR2tYsndeA6g",
+        "nickname": "string2",
+        "profile_image": "string",
+        "created_at": "2026-01-15T05:44:51.248799+00:00"
+    }
+]

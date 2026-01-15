@@ -2,7 +2,7 @@ from fastapi import APIRouter, status, Query
 from schemas.post import PostCreate, PostUpdate
 from typing import Optional
 
-router = APIRouter(prefix="/posts",tags=["Likes"])
+router = APIRouter(prefix="/posts",tags=["Posts"])
 
 @router.get("") # 목록 조회, 검색, 정렬 포함
 def get_posts(page: int = 1, search: Optional[str] = None, sort: str = "latest"):

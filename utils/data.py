@@ -30,7 +30,7 @@ def load_data(filename: str):
             return []
 
 
-def save_data_safe(filename: str, data):
+def save_data(filename: str, data):
     file_path = os.path.join(DATA_DIR, f"{filename}.json")
 
     # 임시 파일에 먼저 쓰기
