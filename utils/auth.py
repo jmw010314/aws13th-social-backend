@@ -78,6 +78,11 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="User not found"
             )
+        if user.get("is_deleted"):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Deleted_user"
+            )
 
         return user
 
