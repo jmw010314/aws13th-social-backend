@@ -11,7 +11,7 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
     matched_user = None
 
     for user in users:
-        if user.get["email"].lower() == form_data.username.lower() and not user.get("is_deleted", False):
+        if user.get("email", "").lower() == form_data.username.lower() and not user.get("is_deleted", False):
             matched_user = user
             break
 
