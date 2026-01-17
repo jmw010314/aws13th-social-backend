@@ -1,4 +1,4 @@
-
+# REST API Documentation
 ## 👤 Users (회원)
 
 ### 회원가입
@@ -129,10 +129,10 @@ Access Token을 통해 인증된 로그인 사용자의 본인 프로필 정보�
 {
   "status": "success",
   "data": {
-    "email": "[user123@naver.com](mailto:user123@naver.com)",
+    "email": "user123@naver.com",
     "name": "jmw",
     "nickname": "j0314",
-    "profile_image": "[https://example.com/image.png](https://example.com/image.png)"
+    "profile_image": "https://example.com/image.png"
   }
 }
 ```
@@ -165,7 +165,7 @@ Access Token을 통해 인증된 로그인 사용자의 본인 프로필 정보�
 {
   "nickname": "jjj",
   "password": "Jmw5678~~",
-  "profile_image": "[https://j.com/image.png](https://j.com/image.png)"
+  "profile_image": "https://j.com/image.png"
 }
 ```
 
@@ -176,7 +176,7 @@ Access Token을 통해 인증된 로그인 사용자의 본인 프로필 정보�
   "status": "success",
   "data": {
     "nickname": "jjj",
-    "profile_image": "[https://j.com/image.png](https://j.com/image.png)"
+    "profile_image": "https://j.com/image.png"
   }
 }
 ```
@@ -234,7 +234,7 @@ Access Token을 통해 인증된 로그인 사용자의 본인 프로필 정보�
   "data": {
     "userId": "1",
     "nickname": "kds",
-    "profile_image": "[https://example.com/image.png](https://example.com/image.png)"
+    "profile_image": "https://example.com/image.png"
   }
 }
 ```

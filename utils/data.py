@@ -3,7 +3,7 @@ import os
 import logging   #로그 남기기
 import shutil
 import tempfile   #임시파일 만들기(저장 안정성을 위해)
-from typing import Optional, Any, Dict, List
+from typing import Optional, Any
 from datetime import datetime, timezone
 
 logger = logging.getLogger(__name__)
@@ -44,7 +44,7 @@ def save_data(filename: str, data):
     # 성공 시 원본 교체 (atomic operation)
     shutil.move(tmp_path, file_path)
 
-def ensure_user_fields(user: Dict[str, Any]) -> Dict[str, Any]:
+def ensure_user_fields(user: dict[str, Any]) -> dict[str, Any]:
     if "is_deleted" not in user:
         user["is_deleted"] = False
     if "deleted_at" not in user:
@@ -52,17 +52,16 @@ def ensure_user_fields(user: Dict[str, Any]) -> Dict[str, Any]:
     return user
 
 
-   #users: 유저 전체 목록(list)
-   #userId: 찾고 싶은 유저 id
-   #반환: 찾으면 user(dict), 못 찾으면 None
-
-def find_user_by_id(users: List[Dict[str, Any]], userId: str) -> Optional[Dict[str, Any]]:
+def find_user_by_id(users: list[dict[str, Any]], userId: str) -> Optional[dict[str, Any]]:
+     #users: 유저 전체 목록(list)
+     #userId: 찾고 싶은 유저 id
+     #반환: 찾으면 user(dict), 못 찾으면 None
     for u in users:
         if str(u.get("userId")) == str(userId):
             return ensure_user_fields(u)
     return None
 
-def soft_delete_user(user: Dict[str, Any]) -> Dict[str, Any]:
+def soft_delete_user(user: dict[str, Any]) -> dict[str, Any]:
     # 유저 한명을 완전히 삭제하는게 아니라 탈퇴 처리 상태로만 바꿔준다
     ensure_user_fields(user)
     user["is_deleted"] = True

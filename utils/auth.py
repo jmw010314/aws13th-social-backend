@@ -81,7 +81,7 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
         if user.get("is_deleted"):
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
-                detail="Deleted_user"
+                detail={"status": "error", "data": {"message": "탈퇴한 계정입니다. 접근이 거부되었습니다."}}
             )
 
         return user

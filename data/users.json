@@ -1,11 +1,42 @@
 [
     {
-        "userId": "8e6a98b4-a979-48e9-9a80-47abb3f5704c",
+        "userId": "035c035c-dbd2-4981-9195-68f10ec14433",
         "email": "string1@naver.com",
         "name": "string1",
-        "password": "$argon2id$v=19$m=65536,t=3,p=4$StVmmpY/Da7oi/HfQZ7laQ$D/Df+b1LfuhAj0h88esk7q/T4UIM5fyKR2tYsndeA6g",
+        "password": "$argon2id$v=19$m=65536,t=3,p=4$Jl/oSuEJCdE2lnpILhdIqw$RycrNlpwGunC1zq7rhMYkHXYw0MAewWZ97b6JAL7Jh8",
+        "nickname": "탈퇴한 사용자",
+        "profile_image": null,
+        "created_at": "2026-01-16T03:35:49.827847+00:00",
+        "is_deleted": true,
+        "deleted_at": "2026-01-16T03:43:40.305111+00:00"
+    },
+    {
+        "userId": "599cbb70-b1f5-4141-8539-ac746cfd1a1b",
+        "email": "string2@naver.com",
+        "name": "string2",
+        "password": "$argon2id$v=19$m=65536,t=3,p=4$9tCwSwX1cpFfpcyZ7UoLHA$kx0sb+7HTWXl5nBIuGzVWsNW/yM1UFjAMZ2mlkrTyMU",
         "nickname": "string2",
         "profile_image": "string",
-        "created_at": "2026-01-15T05:44:51.248799+00:00"
+        "created_at": "2026-01-16T03:36:00.639280+00:00",
+        "is_deleted": false
+    },
+    {
+        "userId": "de625ef7-c0fa-46d6-bfc5-d17bbfcb8ab7",
+        "email": "string3@naver.com",
+        "name": "string3",
+        "password": "$argon2id$v=19$m=65536,t=3,p=4$M3zYGBTga8DnFfvjkfe0QQ$GpCKDwRHQ1opbzwwIQ/qCI6Lq0qSZW/XRfuHEtCIz2Y",
+        "nickname": "string3",
+        "profile_image": "string",
+        "created_at": "2026-01-16T03:36:09.856928+00:00",
+        "is_deleted": false
+    },
+    {
+        "userId": "a40ade43-aab3-43f7-b75a-696be551a281",
+        "email": "string1@naver.com",
+        "name": "string1",
+        "password": "$argon2id$v=19$m=65536,t=3,p=4$2tW56nqiz+5aGbAC/N7qUg$Z8zhWg9b3hCS0yasGcaqyrd2hdCoBNodgQgf0tSGH/w",
+        "nickname": "string11",
+        "profile_image": "string",
+        "created_at": "2026-01-16T03:44:26.992429+00:00"
     }
 ]
