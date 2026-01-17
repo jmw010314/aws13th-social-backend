@@ -23,7 +23,7 @@ def signup(data: UserCreate):
             detail={"status": "error", "data": {"message": "이미 존재하는 이메일입니다."}}
         )
     if data.nickname:
-        if any(u.get('nickname', '') == data.nickname.lower() for u in active_users):
+        if any(u.get('nickname', '').lower() == data.nickname.lower() for u in active_users):
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
                 detail={"status": "error","data":{"message":"닉네임이 중복되었습니다."}}
@@ -35,7 +35,9 @@ def signup(data: UserCreate):
         "password": get_password_hash(data.password),
         "nickname": data.nickname,
         "profile_image": data.profile_image,
-        "created_at": datetime.now(timezone.utc).isoformat()
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "is_deleted": False,
+        "deleted_at": None
     }
     users.append(new_user)
     save_data("users", users)
@@ -79,7 +81,7 @@ def update_me(
                         status_code=status.HTTP_409_CONFLICT,
                         detail={
                             "status": "error",
-                            "data": {"message: 닉네임이 중복되었습니다."}
+                            "data": {"message": "닉네임이 중복되었습니다."}
                         }
                     )
         #내 계정 수정
@@ -123,9 +125,9 @@ def delete_me(current_user: dict = Depends(get_current_user)):
         )
     soft_delete_user(target_user)
     save_data("users", users)
-    return Response(status_code=status.HTTP_204_NO_CONTENT)
+    return
 
-@router.get("/{user_id}")
+@router.get("/{userId}")
 def get_user(user_id: str):
     #로그인 필요없고 공개 정보만 반환
     users = load_data("users")
