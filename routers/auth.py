@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, status
 from fastapi.security import OAuth2PasswordRequestForm
 from utils.auth import verify_password, create_access_token
 from utils.data import load_data
@@ -11,7 +11,7 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
     matched_user = None
 
     for user in users:
-        if user["email"].lower() == form_data.username.lower():
+        if user.get["email"].lower() == form_data.username.lower() and not user.get("is_deleted", False):
             matched_user = user
             break
 
@@ -26,7 +26,7 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
 
 
     raise HTTPException(
-        status_code=401,
+        status_code=status.HTTP_401_UNAUTHORIZED,
         detail={
             "status": "error",
             "data": {

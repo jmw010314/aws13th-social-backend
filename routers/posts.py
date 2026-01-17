@@ -1,6 +1,5 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from fastapi import APIRouter, status, Query, Depends, HTTPException
-from routers import users
 from schemas.post import PostCreate, PostUpdate
 from utils.auth import get_current_user
 from utils.data import load_data, save_data
@@ -79,7 +78,7 @@ def create_post(
         max([p["postId"] for p in posts], default=0) + 1
     )
     #현재 시간
-    created_at = datetime.now().isoformat()
+    created_at = datetime.now(timezone.utc).isoformat()
 
     #게시글 작성
     new_post = {
@@ -102,7 +101,7 @@ def create_post(
         for u in users
         if u.get("is_deleted") is not True
     }
-    nickname = user_map.get(current_user["userId"], "알 수 없음")
+    nickname = current_user.get("nickname", "알 수 없음")
 
     return {
         "status": "success",
@@ -111,8 +110,8 @@ def create_post(
             "content": new_post["content"],
             "nickname": nickname,
             "created_at": created_at,
-            "views": 0,
-            "likes": 0,
+            "viewCount": 0,
+            "likeCount": 0,
         }
     }
 
@@ -167,12 +166,12 @@ def get_my_posts():
     return {"message": "내가 쓴 게시글 목록"}
 
 @router.get("/{postId}")
-def get_post(postId: str):
+def get_post(postId: int):
     return {"message": f"{postId}번 상세 조회 (조회수 증가 로직 예정)"}
 
 @router.patch("/{postId}")
 def update_post(
-    postId: str,
+    postId: int,
     data: PostUpdate,
     current_user: dict = Depends(get_current_user),
 ):
@@ -181,9 +180,14 @@ def update_post(
     -로그인 필요
     -본인이 작성한 게시글만 수정 가능
     """
-    try:
-        postId_int = int(postId)
-    except ValueError:
+    posts = load_data("posts")
+
+    post = next(
+        (p for p in posts if p["postId"] == postId),
+        None
+    )
+
+    if post is None or post.get("is_deleted") is True:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail={
@@ -193,11 +197,7 @@ def update_post(
                 }
             }
         )
-    posts = load_data("posts")
-    post = next(
-        (p for p in posts if p["postId"] == postId_int),
-        None
-    )
+
     # 게시글이 없거나 삭제된 경우
     if post is None or post.get("is_deleted") is True:
         raise HTTPException(
@@ -247,7 +247,7 @@ def update_post(
         post["content"] = data.content.strip()
 
     #  업데이트 갱신
-    post["updated_at"] = datetime.now().isoformat()
+    post["updated_at"] = datetime.now(timezone.utc).isoformat()
     save_data("posts", posts)
 
     # 작성자 닉네임 찾기
@@ -257,19 +257,19 @@ def update_post(
         for u in users
         if u.get("is_deleted") is not True
     }
-    nickname = user_map.get(current_user["userId"], "알 수 없음")
+    nickname = current_user.get("nickname", "알 수 없음")
 
     return {
         "status": "success",
         "data": {
-            "postId": postId,  # 받은 그대로 string 반환
+            "postId": post["postId"],
             "title": post["title"],
             "content": post["content"],
             "nickname": nickname,
-            "createdAt": post["created_at"],
-            "updatedAt": post["updated_at"],
-            "view": post.get("viewCount", 0),
-            "likes": post.get("likeCount", 0),
+            "created_at": post["created_at"],
+            "updated_at": post["updated_at"],
+            "viewCount": post.get("viewCount", 0),
+            "likeCount": post.get("likeCount", 0),
         }
     }
 
