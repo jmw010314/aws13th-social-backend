@@ -11,6 +11,7 @@ router = APIRouter(prefix="/posts",tags=["Posts"])
 def get_posts(
         page: int = Query(1, ge=1),
         limit: int = Query(20, ge=1, le=100),
+        sort: str = Query("latest", pattern="^(latest|views|likes)$"),
 ):
     """
         게시글 목록 조회
@@ -24,8 +25,25 @@ def get_posts(
 
     #삭제되지 않은 게시글만 필터링
     active_posts = [
-        p for p in posts if p.get("is_deleted") is not True
+        p for p in posts if not p.get("is_deleted", False)
     ]
+    # 정렬 추가
+    if sort == "latest":
+        active_posts.sort(
+            key=lambda p: p.get("created_at", ""),
+            reverse=True
+        )
+    elif sort == "views":
+        active_posts.sort(
+            key=lambda p: p.get("viewCount", 0),
+            reverse=True
+        )
+
+    elif sort == "likes":
+        active_posts.sort(
+            key=lambda p: p.get("likeCount", 0),
+            reverse=True
+        )
     #페이지네이션 계산
     total = len(active_posts) # 전체 게시글 수
     start = (page - 1) * limit  # 현재 페이지의 시작 인덱스 계산
@@ -187,16 +205,6 @@ def update_post(
         None
     )
 
-    if post is None or post.get("is_deleted") is True:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail={
-                "status": "error",
-                "data": {
-                    "message": "존재하지 않는 게시글입니다."
-                }
-            }
-        )
 
     # 게시글이 없거나 삭제된 경우
     if post is None or post.get("is_deleted") is True:
@@ -273,6 +281,37 @@ def update_post(
         }
     }
 
-@router.delete("/{postId}")
-def delete_post(postId: str):
-    return {"message": f"{postId}번 삭제"}
+@router.delete("/{postId}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_post(
+    postId: int,
+    current_user: dict = Depends(get_current_user),
+):
+    posts = load_data("posts")
+    post = next(
+        (p for p in posts if p["postId"] == postId),
+        None
+    )
+
+    # 게시글이 없거나 이미 삭제된 경우
+    if post is None or post.get("is_deleted", False):
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail={
+                "status": "error",
+                "data": {"message": "존재하지 않는 게시글입니다."}
+            }
+        )
+    # 게시글이 본인 글인지
+    if post["userId"] != current_user["userId"]:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail={
+                "status": "error",
+                "data": {"message": "게시글을 삭제할 권한이 없습니다."}
+            }
+        )
+    post["is_deleted"] = True
+    post["updated_at"] = datetime.now(timezone.utc).isoformat()
+
+    save_data("posts", posts)
+    return
