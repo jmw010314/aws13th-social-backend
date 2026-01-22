@@ -74,3 +74,11 @@ def soft_delete_user(user: Dict[str, Any]) -> Dict[str, Any]:
         user["profile_image"] = None
 
     return user
+
+# utils/data.py
+def get_user_nickname_map(users: list) -> dict:
+    return {
+        u["userId"]: u.get("nickname")
+        for u in users
+        if not u.get("is_deleted")
+    }
