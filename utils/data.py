@@ -77,8 +77,15 @@ def soft_delete_user(user: Dict[str, Any]) -> Dict[str, Any]:
 
 # utils/data.py
 def get_user_nickname_map(users: list) -> dict:
+    """
+    - 탈퇴한 사용자: "탈퇴한 사용자"
+    - 활성 사용자: 닉네임 (없으면 "알 수 없음")
+    """
     return {
-        u["userId"]: u.get("nickname")
+        u["userId"]: (
+            "탈퇴한 사용자" if u.get("is_deleted")
+            else u.get("nickname", "알 수 없음")
+        )
         for u in users
-        if not u.get("is_deleted")
+        if u.get("userId") is not None
     }

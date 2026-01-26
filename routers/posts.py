@@ -98,7 +98,7 @@ def create_post(
     posts = load_data("posts")
     # postId 생성
     new_post_id = (  # 마지막 게시글 ID에 1 추가해 고우 ID 생성
-            max([p["postId"] for p in posts], default=0) + 1
+            max([p("postId", 0)  for p in posts], default=0) + 1
     )
     # 현재 시간
     created_at = datetime.now(timezone.utc).isoformat()
@@ -157,7 +157,7 @@ def search_posts(
             continue
         title = post.get("title", "")
         content = post.get("content", "")
-        nickname = user_map.get(post["userId"], "탈퇴한 사용자")
+        nickname = user_map.get(post.get("userId"), "알 수 없음")
 
         # 제목 / 내용 / 닉네임 중 하나라도 키워드 포함되면 확인
         if (
