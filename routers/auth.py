@@ -10,8 +10,15 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
     users = load_data("users")
     matched_user = None
 
+    username_input = form_data.username.strip()
+
     for user in users:
-        if (user.get("email") or "").lower() == form_data.username.lower() and not user.get("is_deleted", False):
+        email = user.get("email")
+        if (
+            email  # 👈 None이거나 ""이면 False
+            and email.lower() == username_input.lower()
+            and not user.get("is_deleted", False)
+        ):
             matched_user = user
             break
 

@@ -98,7 +98,7 @@ def create_post(
     posts = load_data("posts")
     # postId 생성
     new_post_id = (  # 마지막 게시글 ID에 1 추가해 고우 ID 생성
-            max([p("postId", 0)  for p in posts], default=0) + 1
+            max([p.get("postId", 0)  for p in posts], default=0) + 1
     )
     # 현재 시간
     created_at = datetime.now(timezone.utc).isoformat()
