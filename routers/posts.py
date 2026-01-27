@@ -235,33 +235,32 @@ def get_post(postId: int):
     - 삭제된 게시글은 조회 불가
     """
     # 데이터 로드
-
-    posts = load_data("posts")
     users = load_data("users")
 
     with data_lock:
         posts = load_data("posts")
 
-    # 해당 postId를 가진 게시글 찾기
-    post = next(
-        (p for p in posts if p["postId"] == postId),
-        None
-    )
-
-    # 게시글이 없거나 삭제된 경우 체크
-    if post is None or post.get("is_deleted") is True:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail={
-                "status": "error",
-                "data": {
-                    "message": "존재하지 않는 게시글입니다."
-                }
-            }
+        # 해당 postId를 가진 게시글 찾기
+        post = next(
+            (p for p in posts if p["postId"] == postId),
+            None
         )
-    # 조회수 증가 및 저장
-    post["viewCount"] = post.get("viewCount", 0) + 1
-    save_data("posts", posts)
+
+        # 게시글이 없거나 삭제된 경우 체크
+        if post is None or post.get("is_deleted") is True:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail={
+                    "status": "error",
+                    "data": {
+                        "message": "존재하지 않는 게시글입니다."
+                    }
+                }
+            )
+        # 조회수 증가 및 저장
+        post["viewCount"] = post.get("viewCount", 0) + 1
+        save_data("posts", posts)
+
 
     # 작성자 닉네임 찾기
     user_map = get_user_nickname_map(users)
