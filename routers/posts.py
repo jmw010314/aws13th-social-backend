@@ -1,5 +1,5 @@
 from enum import Enum
-from fastapi import APIRouter, status, Query, Depends, HTTPException
+from fastapi import APIRouter, status, Query, Depends, HTTPException, Response
 from schemas.post import PostCreate, PostUpdate
 from utils.auth import get_current_user
 from utils.data import load_data, save_data, get_user_nickname_map, data_lock
@@ -188,7 +188,7 @@ def get_my_posts(
     # 내가 쓴 게시글  + 삭제 안된 게시글만
     my_posts = [
         p for p in posts
-        if p["userId"] == current_user["userId"]
+        if p.get("userId") == current_user["userId"]
            and not p.get("is_deleted", False)
     ]
 
@@ -403,4 +403,4 @@ def delete_post(
     post["updated_at"] = datetime.now(timezone.utc).isoformat()
 
     save_data("posts", posts)
-    return
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
