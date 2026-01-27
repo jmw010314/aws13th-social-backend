@@ -228,10 +228,7 @@ def get_my_posts(
 
 
 @router.get("/{postId}")
-def get_post(
-        postId: int,
-        _current_user: dict = Depends(get_current_user),
-):
+def get_post(postId: int):
     """
     게시글 상세 조회
     - 조회 시마다 조회수 1 증가
