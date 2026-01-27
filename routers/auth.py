@@ -12,10 +12,22 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
 
     username_input = form_data.username.strip()
 
+    if not username_input:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail={
+                "status": "error",
+                "data": {
+                    "message": "이메일 또는 비밀번호가 일치하지 않습니다."
+                }
+            }
+        )
+    matched_user = None
+
     for user in users:
         email = user.get("email")
         if (
-            email  # 👈 None이거나 ""이면 False
+            email  # None이거나 ""이면 False
             and email.lower() == username_input.lower()
             and not user.get("is_deleted", False)
         ):
