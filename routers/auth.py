@@ -22,7 +22,6 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
                 }
             }
         )
-    matched_user = None
 
     for user in users:
         email = user.get("email")
